@@ -912,6 +912,14 @@ Vant组件适配(px自动转成rem)
 
 ![63975387927](VUE.assets/1639753879276.png)
 
+##### rootValue：设置根元素大小，一般设计为设计稿宽度的十分之一(375宽度设置37.5，750设置75)
+
+项目中引用了amfe-flexible,动态地将1rem设置为屏幕宽度的10分之一，而postcss则用来将px转化为rem数值，因为引用了amfe-flexible(十分之一)，所以postcss的rootValue设置为设计稿宽度的10分之一
+
+vant按照37.5设计 
+
+
+
 ![63991949494](VUE.assets/1639919494946.png)
 
 {file} 解构赋值写法
