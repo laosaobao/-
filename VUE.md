@@ -824,6 +824,12 @@ hash值 指url上#后面内容
 
 
 
+#### 路由开启props传参
+
+开启后可把路由参数映射到对应子组件props
+
+![64597483597](VUE.assets/1645974835974.png)
+
 #### 路由嵌套
 
 ![63872132866](VUE.assets/1638721328667.png)
@@ -914,9 +920,9 @@ Vant组件适配(px自动转成rem)
 
 ##### rootValue：设置根元素大小，一般设计为设计稿宽度的十分之一(375宽度设置37.5，750设置75)
 
-项目中引用了amfe-flexible,动态地将1rem设置为屏幕宽度的10分之一，而postcss则用来将px转化为rem数值，因为引用了amfe-flexible(十分之一)，所以postcss的rootValue设置为设计稿宽度的10分之一
+项目中引用了amfe-flexible,动态地将1rem设置为屏幕宽度的10分之一(设置不同视窗下根节点的font-size)，而postcss则用来将px转化为rem数值(将代码里的px转为rem单位)，因为引用了amfe-flexible(十分之一)，所以postcss的rootValue设置为设计稿宽度的10分之一
 
-vant按照37.5设计 
+vant按照37.5设计 (头条项目中按照750二倍图设计，因此除vant组件外，rootvalue为75)
 
 
 
