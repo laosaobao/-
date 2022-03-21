@@ -250,3 +250,114 @@ VW/VH不混用，不同屏幕宽高比例不同,混用会导致盒子比例变�
 
 ![63456595533](assets/1634565955336.png)
 
+
+
+## SCSS(SASS)
+
+### 变量
+
+`sass`使用`$`符号来标识变量 
+
+```bash 
+$highlight-color: #f90     
+```
+
+上面我们声明了一个 名为**`$highlight-color`**的变量, 我们可以把该变量用在任何位置
+
+```bash
+#app {
+    background-color:  $highlight-color;
+}     
+```
+
+以空格分割的多属性值也可以标识变量
+
+```bash
+$basic-border: 1px solid black;
+```
+
+```bash
+#app {
+    background-color:  $highlight-color;
+    border: $basic-border
+}     
+```
+
+**变量范围**
+
+与`CSS`属性不同，变量可以在`css`规则块定义之外存在。当变量定义在`css`规则块内，那么该变量只能在此规则块内使用。如果它们出现在任何形式的`{...}`块中（如`@media`或者`@font-face`块），情况也是如此：
+
+```bash
+$nav-color: #F90;
+nav {
+  $width: 100px;
+  width: $width;
+  color: $nav-color;
+  background-color: black
+}
+
+# 编译后 
+
+nav {
+  width: 100px;
+  color: #F90;
+  background-color: black;
+}
+
+```
+
+在这段代码中，`$nav-color`这个变量定义在了规则块外边，所以在这个样式表中都可以像 `nav`规则块那样引用它。`$width`这个变量定义在了`nav`的`{ }`规则块内，所以它只能在`nav`规则块 内使用。这意味着是你可以在样式表的其他地方定义和使用`$width`变量，不会对这里造成影响。
+
+**嵌套语法**
+
+和less一样,scss同样支持**`嵌套型`**的语法
+
+```scss
+#content {
+    article {
+      h1 { color: #1dc08a }
+      p {  font-style: italic; }
+    }
+    aside { background-color: #f90 }
+  }
+```
+
+转化后
+
+```scss
+#content article h1 {
+  color: #1dc08a;
+}
+
+#content article p {
+  font-style: italic;
+}
+
+#content aside {
+  background-color: #f90;
+}
+
+```
+
+**&父选择器**
+
+假如你想针对某个特定子元素 进行设置
+
+比如
+
+```scss
+  #content {
+    article {
+      h1 { color: #1dc08a }
+      p {  font-style: italic; }
+      a {
+        color: blue;
+        &:hover { color: red }
+      }
+    }
+    aside { background-color: #f90 }
+  }
+```
+
+> 学到这里,我们会发现scss和less有很多相似之处,最大的区别就在于声明变量的方式,less采用的是**`@变量名`**, 而scss采用的**`$变量名`**
+

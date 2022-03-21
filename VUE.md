@@ -274,7 +274,47 @@ MVVM设计模式
 
 ![63776586399](VUE.assets/1637765863996.png)
 
-#### 接收事件对象(event)
+#### **native后缀(加在@事件名后面)**
+
+**自定义组件**不加.native不会执行原生事件(如click等)
+
+ 我们可以称native为原型绑定。只有**使用vue组件时**我们会用到这个修饰符。当我们在组件上绑定监听时，我们绑定的是组件定义的监听。以element框架为例，<el-input>是element提供的组件。
+
+在VUE中，**自定义组件上绑定的事件都是自定义事件(即使绑定@click也会被认为是自定义事件)**，无法直接绑定原生事件(如click)，调用自定义事件需要在组件内使用$emit()的方式
+
+如果element没给el-input内部的原生input标签定义@click =$emit('click'),function)，那么我们这次绑定是无效的。
+
+![img](VUE.assets/15214039-42ceaeceb351369a.webp)
+
+当我们加上native词缀，<el-input @click.native="">
+
+加了native相当于**把自定义组件看成了html元素**可以**直接监听原生click事件(相当于给自定义组件的根元素添加了原生监听事件)**
+
+(**部分组件不需要.native是因为组件已经替你封装好了方法(猜测是在子组件，原生标签上定义$emit('click')，则会调用外部使用组件时在组件上定义的@click事件))**
+
+加了native相当于**把自定义组件看成了html元素**可以**直接监听原生click事件**,否则**自定义组件上绑定的事件默认是自定义事件**(自定义事件通过组件内部使用$emit进行调用)而你在自定义组件上没有定义这个事件,所以**不加native不会执行**
+
+
+
+
+
+#### .self字段
+
+阻止自己身上冒泡行为的触发
+
+" .stop “和” .self “的区别：” .self “只会阻止自己身上冒泡行为的触发，并不会真正阻止 冒泡的行为。” .stop "会阻止所有的冒泡的行为。(.self修饰的元素的父元素仍会触发冒泡事件)
+
+
+
+#### .prevent
+
+阻止默认行为
+
+
+
+
+
+#### 接收事件对象($event)
 
 ![63776600461](VUE.assets/1637766004615.png)
 
@@ -514,9 +554,17 @@ toFixed(n) 保留n位小数
 
 ![64613437290](VUE.assets/1646134372900.png)
 
-在用emit完成子向父组件传参，只有单个参数时，在父组件可以用 $event指代子组件向父组件传递的那个参数
+##### 在用emit完成子向父组件传参，只有**单个参数时，在父组件可以用 $event指代子组件向父组件传递的那个参数**
 
-**例如上述，当传递给子组件的参数既要使用又要修改时，要先用props向子组件传递参数，然后在子组件里用$emit()调用事件修改数据，比较麻烦**，可以修改为v-model写法 如下：
+补：关于原生JavaScript传递event事件的内容，
+
+1. 在最早的HTML事件处理程序中我们可以直接传入多个参数，并且可以不传入event直接传参，event可以调换前后顺序但必须是event关键字，不能是e ，如果是e就会报错：ReferenceError: e is not defined
+
+2. 在"οnclick=function"以及addEventListener中不再看重event关键词，可以传任意标识，但只能传event(因为addEventListener三个参数，第一个事件名，第二个传递回调函数，第三个配置，无法直接传递其他参数)，默认只传入`event`参数，如果想传入其它参数，可以采用将方法进行封装来处理
+
+  原文链接：https://blog.csdn.net/a1059526327/article/details/106392305/
+
+**在例如上述，当传递给子组件的参数既要使用又要修改时，要先用props向子组件传递参数，然后在子组件里用$emit()调用事件修改数据，比较麻烦**，可以修改为v-model写法 如下：
 
 ![64614606541](VUE.assets/1646146065419.png)
 
@@ -608,7 +656,7 @@ prop定义子组件接收的参数名(自定义后就可以不用声明为value)
 
 ![63845430078](VUE.assets/1638454300786.png)
 
-#### 获取组件对象
+#### ref作用在组件上时，可以获取组件对象实例(用实例可以调用组件方法)
 
 ![63845524398](VUE.assets/1638455243987.png)
 
@@ -796,7 +844,7 @@ hash值 指url上#后面内容
 
 ![63871698878](VUE.assets/1638716988784.png)
 
-
+参数后加?，代表参数非必传	
 
 #### 路由重定向
 
@@ -1019,3 +1067,87 @@ flex-shrink:0 不参与flex布局宽度计算(某些情况下，对flex某个子
 ![64627464491](VUE.assets/1646274644913.png)
 
 #### 裁切工具库cropperjs
+
+
+
+### Webpack proxy反向代理解决跨域问题
+
+> 采用vue-cli的代理配置
+
+vue-cli的配置文件即**`vue.config.js`**,这里有我们需要的 [代理选项](https://cli.vuejs.org/zh/config/#devserver-proxy)
+
+```js
+module.exports = {
+  devServer: {
+   // 代理配置
+    proxy: {
+        // 这里的api 表示如果我们的请求地址有/api的时候,就出触发代理机制
+        // localhost:8888/api/abc  => 代理给另一个服务器
+        // 本地的前端  =》 本地的后端  =》 代理我们向另一个服务器发请求 （行得通）
+        // 本地的前端  =》 另外一个服务器发请求 （跨域 行不通）
+        '/api': {
+        target: 'www.baidu.com', // 我们要代理的地址
+        changeOrigin: true, // 是否跨域 需要设置此值为true 才可以让本地服务代理我们发出请求
+         // 路径重写
+        pathRewrite: {
+            // 重新路由  localhost:8888/api/login  => www.baidu.com/api/login
+            '^/api': '' // 假设我们想把 localhost:8888/api/login 变成www.baidu.com/login 就需要这么做 
+        }
+      },
+    }
+  }
+}
+```
+
+以上就是我们在vue-cli项目中配置的代理设置
+
+**生产环境的跨域**
+
+生产环境表示我们已经开发完成项目，将项目部署到了服务器上,这时已经没有了vue-cli脚手架的**`辅助`**了，我们只是把打包好的**`html+js+css`**交付运维人员，放到**`Nginx`**服务器而已,所以此时需要借助**`Nginx`**的反向代理来进行
+
+```bash
+server{
+    # 监听9099端口
+    listen 9099;
+    # 本地的域名是localhost
+    server_name localhost;
+    #凡是localhost:9099/api这个样子的，都转发到真正的服务端地址http://baidu.com
+    location ^~ /api {
+        proxy_pass http://baidu.com;
+    }    
+}
+```
+
+**`注意`**:这里的操作一般由运维人员完成,需要前端进行操作,这里我们进行一下简单了解
+
+
+
+
+
+#### 注册自定义指令
+
+指令功能，给img标签绑定onerror函数(img标签加载地址错误时，会自动执行onerror函数，这里绑定onerror函数设定要执行的操作)，当图片加载失败时，使用默认图片
+
+![64707680294](VUE.assets/1647076802943.png)
+
+
+
+#### functional为true，表示该组件为一个函数式组件
+
+函数式组件： 没有data状态，没有响应式数据，只会接收props属性， 没有this， 他就是一个函数
+
+
+
+#### 利用sync修饰符关闭新增弹层
+
+> vuejs为我们提供了**`sync修饰符`**，它提供了一种简写模式 也就是
+
+```js
+// 子组件 update:固定写法 (update:props名称, 值)
+this.$emit('update:showDialog', false) //触发事件
+// 父组件 sync修饰符
+<child  :showDialog.sync="showDialog" />
+
+```
+
+只要用sync修饰，就可以省略父组件的监听和方法，直接将值赋值给showDialog

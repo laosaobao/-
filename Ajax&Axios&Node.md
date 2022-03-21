@@ -264,7 +264,7 @@ xhr.upload.onprogress事件
 
 
 
-## Node.js基础
+# Node.js基础
 
 ![63690360482](前后端交互.assets/1636903604820.png)
 
@@ -454,5 +454,7 @@ package.json文件只能锁定大版本，即版本号的第一位，**不能锁
 
 
 
+#### requrie()加载静态资源文件，返回具体文件的相对路径
 
+![64707535124](Ajax&Axios&Node.assets/1647075351248.png)
 
