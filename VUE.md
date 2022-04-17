@@ -554,7 +554,7 @@ toFixed(n) 保留n位小数
 
 ![64613437290](VUE.assets/1646134372900.png)
 
-##### 在用emit完成子向父组件传参，只有**单个参数时，在父组件可以用 $event指代子组件向父组件传递的那个参数**
+##### 在用emit完成子向父组件传参，只有**单个参数时，在父组件可以用 $event指代子组件向父组件传递的那个参数(在自定义事件里，event代表传参)**
 
 补：关于原生JavaScript传递event事件的内容，
 
@@ -1151,3 +1151,42 @@ this.$emit('update:showDialog', false) //触发事件
 ```
 
 只要用sync修饰，就可以省略父组件的监听和方法，直接将值赋值给showDialog
+
+
+
+#### URl value字符串包含了=或&，需要进行转义
+
+Url参数[字符串](https://so.csdn.net/so/search?q=%E5%AD%97%E7%AC%A6%E4%B8%B2&spm=1001.2101.3001.7020)中使用key=value键值对这样的形式来传参，键值对之间以&符号分隔，如/s?q=abc& ie=utf-8。如果你的**value字符串中包含了=或者&，那么势必会造成接收Url的服务器解析错误**，因此必须将引起歧义的&和= 符号进行转义，也就是对其进行编码。
+
+
+
+#### :key 属性的另一个作用
+
+:key值发生变化时，组件会重新渲染，某些情况下，由于组件没有重新渲染导致的bug，可以利用:key
+
+
+
+#### // 开启域名/ip访问
+
+​    config.devServer.disableHostCheck(true)
+
+
+
+## 注意：用$emit修改父组件传过来的Props值，修改后在当前函数结束前不会立即生效，当前函数内拿到的Props值仍然是修改前的
+
+若该函数内后续有需要用到修改后的值，则建议修改前创建一个中间变量newVal记录修改后的值
+
+```js
+Props:{
+    checked  //传值为false
+},
+const changeChecked = () => {
+      //创建中间变量newVal记录修改后的值
+      const newVal = !checked.value
+      emit('updateChecked', newVal) //newVal:true
+      // 此时在当前函数结束前，checked值仍为原值 false,但父组件数据已完成修改
+       console.log(checked.value) //false
+       //若该函数内后续有需要用到修改后的值，则建议修改前创建一个中间变量newVal
+      
+    }
+```

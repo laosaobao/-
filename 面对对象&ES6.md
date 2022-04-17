@@ -92,6 +92,10 @@ filter()筛选
 
 ![63627488245](面对对象(es6).assets/1636274882457.png)
 
+filter(value=>value)可以剔除undefined内容
+
+
+
 some() 查找是否有满足元素 (返回true or false)
 
 ![63627529275](面对对象(es6).assets/1636275292759.png)
@@ -463,3 +467,31 @@ let关键字  块级作用域
 
 ![63655558340](面对对象(es6).assets/1636555583401.png)
 
+#### 取对象值时加上? 如:obj.name?.value
+
+obj对象的name属性不存在时，obj.name 不会报错 输出undefined ,但obj.name.value会报错
+
+可以写为obj.name&&obj.name.value
+
+es6写法为obj.name?.value
+
+
+
+#### 变量前+号 如 ：+a
+
+if (+value >= distance) {
+这个+什么意思
+
+可以理解为
+
+```
+Number(value)
+```
+
+会将其按照Number函数的规则转换为数值或者NaN,规则大概如下：
+
+- Boolean:true返回1，false返回0
+- 数据值，直接返回
+- null，返回0
+- undefined，返回NaN
+- 对于字符串，**将其转换为十进制数值**，会忽略前面的0（16进制除外），空字符串返回0，浮点数会返回浮点数值。其他格式字符串（无论是否数字开头，返回NaN，字符串中好几个小数点，返回NaN）
