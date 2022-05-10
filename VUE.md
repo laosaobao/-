@@ -64,7 +64,17 @@ npm  init -y 快速初始化创建package.json   添加 “type‘:"module"
 
 ![63748830234](VUE.assets/1637488302346.png)
 
-.catch捕捉错误
+#### .catch(reject())捕捉错误
+
+如果前面的then()，传递了错误回调的方法，就不会执行.catch()方法里的回调函数
+
+前面then里没传，才会执行.catch里的错误回调
+
+相关源码，其实.catch调用的还是then，传入回调函数
+
+是否执行reject，then方法里做了相关的判断
+
+![65140578337](VUE.assets/1651405783376.png)
 
 ![63748889535](VUE.assets/1637488895359.png)
 
@@ -102,17 +112,29 @@ new Promise时，内部定义的方法就已经执行。正常操作是在定义
 
 因为then方法是Promise对象里的方法，写代码时不调用then或者不传递成功回调，就不会对之前resolve()方法保存在Promise对象里的结果数据做任何操作，也就无法拿到结果值。
 
-需要在回调函数里设置return，也就是.then(成功function(){return 值}) 才能拿到返回的结果值。
 
-所以在用Promise封装操作时，操作内容需要调用resolve()方法，并且外部调用then传入回调函数，才能拿到结果值。
 
-如果是**await方式**，await可以直接提取内部执行resolve()方法时保存在Promise对象里的结果值，所以使用await就不需要使用then()
+如果是**await方式**，await相当于then的语法糖，把await后的所有操作都包裹为成功回调resolve()，然后传递给then
 
 
 
 ![63749643325](VUE.assets/1637496433257.png)
 
-#### async/await  (ES8出现)
+#### async/await  (ES7出现)
+
+#### 重：async/await相当于promise里then操作的语法糖
+
+const result=await Promise(xxx) 
+
+console.log(result)
+
+**await相当于把await之后的操作包裹为一个成功回调resolve(val)，然后传入then方法里执行，**
+
+即resolve(val){const result=val;console.log(result)}, Promise.then(resolve())
+
+所以说await后的所有代码，相对于async外面的代码是异步的，因为await后的所有代码都是then的成功回调函数resolve()的内容
+
+且，await Promise，该Promise如果执行失败，await后的所有代码也不会执行，因为await后的代码相当于成功回调方法里的内容
 
 ![63749781407](VUE.assets/1637497814074.png)
 
@@ -580,6 +602,13 @@ prop定义子组件接收的参数名(自定义后就可以不用声明为value)
 
 ![64614935142](VUE.assets/1646149351420.png)
 
+.sync用法
+
+// 子组件 update:固定写法 (update:props名称, 值)
+this.$emit('update:showDialog', false) //触发事件
+// 父组件 sync修饰符
+<child  :showDialog.sync="showDialog" />
+
 #### 跨组件传值  EventBus
 
 在EventBus/ 中创建空白vue对象，两个组件共同引入该空白对象，
@@ -600,7 +629,7 @@ prop定义子组件接收的参数名(自定义后就可以不用声明为value)
 
 ## 构子函数
 
-![63836517438](VUE.assets/1638453059335.png)
+![63836517438](VUE.assets/1638453059335.png) 
 
 #### 初始化
 
@@ -925,6 +954,12 @@ hash值 指url上#后面内容
 ![63887631107](VUE.assets/1638876311077.png)
 
 
+
+#### 路由懒加载
+
+![65201365183](VUE.assets/1652013651835.png)
+
+通过函数返回的这种写法，在打包时，会把每个模块打包成单独的chunk包，引入时更有效
 
 ## vant组件库
 
