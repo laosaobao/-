@@ -128,6 +128,12 @@ const result=await Promise(xxx)
 
 console.log(result)
 
+**async相当于声明了一个newPromise**
+
+且async声明的函数，里面没有使用await，return了一个值，相当于new Promise()里调用了resolve()
+
+![65243773225](VUE.assets/1652437732251.png)
+
 **await相当于把await之后的操作包裹为一个成功回调resolve(val)，然后传入then方法里执行，**
 
 即resolve(val){const result=val;console.log(result)}, Promise.then(resolve())
@@ -367,6 +373,8 @@ MVVM设计模式
 
 
 #### v-model修饰符
+
+.lazy 失焦时才进行更新，而不是每次输入都进行更新
 
 ![63785109313](VUE.assets/1637851093136.png)
 
@@ -921,6 +929,14 @@ hash值 指url上#后面内容
 
 
 
+query方式传参，用传统path形式，用声明式/或者编程式query:{},地址栏都会显示参数及参数值
+
+ ?name=xxx&age=xxx
+
+想用params方式传参，必须用router.name的方式。或者要在路由规则进行声明/:name/:age
+
+params 传参不会显示在地址栏(路由规则声明了则显示)，且刷新页面后数据会丢失(需要配合持久化)
+
 #### 路由开启props传参
 
 开启后可把路由参数映射到对应子组件props
@@ -1225,3 +1241,12 @@ const changeChecked = () => {
       
     }
 ```
+
+
+### vue2使用swiper7.4.1(新版需要vue3)
+
+支持用html，非组件方式创建swiper
+
+![65440932092](VUE.assets/1654409320920.png)
+
+![65440936134](VUE.assets/1654409361349.png)
