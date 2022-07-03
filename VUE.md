@@ -977,6 +977,42 @@ params 传参不会显示在地址栏(路由规则声明了则显示)，且刷�
 
 通过函数返回的这种写法，在打包时，会把每个模块打包成单独的chunk包，引入时更有效
 
+
+
+## mixins混入
+
+mixins是一个js对象，它可以包含我们组件中script项中的任意功能选项，如data、components、methods 、created、computed等等。我们只要将共用的功能以对象的方式传入 mixins选项中，当组件使用 mixins对象时所有mixins对象的选项都将被混入该组件本身的选项中来，这样就可以提高代码的重用性，使你的代码保持干净和易于维护。但会和原组件中的同名data和methons有冲突
+
+创建一个mixins文件夹，文件夹下新建一个myMixins.js文件。前面我们说了mixins是一个js对象，所以应该以对象的形式来定义myMixins，在对象中我们可以和vue组件一样来定义我们的data、components、methods 、created、computed等属性，并通过export导出该对象
+myMixins.js：
+
+// myMixins.js
+export default {
+   data () {
+     return {
+          num:1  } },
+   mounted() {
+   	  this.speak();
+   },
+   methods: {
+      speak() {
+          console.log(this.num);
+      },  }}
+
+引入方式，组件中import，声明mixins选项
+
+![65658842010](VUE.assets/1656588420105.png)
+
+**多个组件引入的mixins之间的数据不共享，各自维护一份。**
+
+
+
+## Mixins合并冲突
+
+（**1）值为对象(components、methods 、computed、data)的选项，混入组件时选项会被合并，键冲突时优先组件，组件中的键会覆盖混入对象的**
+
+**（2）值为函数(created、mounted)的选项，混入组件时选项会被合并调用，混合对象里的钩子函数在组件里的钩子函数之前调用**
+
 ## vant组件库
 
 ![63887653864](VUE.assets/1638876538644.png)
